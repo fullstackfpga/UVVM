@@ -163,8 +163,9 @@ endif
 
 VMAP:=vmap
 VCOM:=vcom
-VCOMOPTS:=-2008 -explicit -vopt -stats=none
+VCOMOPTS:=-2008 -explicit -stats=none
 VSIM:=vsim
+VCOMCTL:=compile_all_and_simulate
 VSIMTCL:=onfinish exit; run -all; exit
 ifeq ($(VHDL_SUPPRESS_IEEE_ASSERTS),TRUE)
 VSIMTCL:=set NumericStdNoWarnings 1; $(VSIMTCL)
@@ -172,21 +173,22 @@ endif
 ifneq ($(WAVE),)
 VSIMTCL:=vcd file $(WAVE); vcd add -r *; $(VSIMTCL)
 endif
-VSIMOPTS:=-t ps -c -onfinish stop -do "$(VSIMTCL)"
+VSIMOPTS:= -c -do "$(VCOMCTL).do"
+VSIMROPTS:=-t ps -c -onfinish stop -do "$(VSIMTCL)"
 
 modelsim.ini: $(SIM_LIB_PATH)/uvvm/*
 	$(foreach L,$?,$(VMAP) $(notdir $L) $L;)
 
 # ModelSim/Questa compilation command
 define COMPILE_CMD
-$1: | modelsim.ini
-	$(VCOM) -work $1 $(VCOMOPTS) $2
+$1: 
+	$(VSIM) -work $1 $(VSIMOPTS)  
 endef
 
 # ModelSim/Questa simulation command
 define RUN_CMD
 modelsim questa: $1
-	$(VSIM) -work $1 $(VSIMOPTS) $2 $(strip $(addprefix -g,$(subst ;, ,$3)))
+	$(VSIM) -work $1 $(VSIMROPTS) $2 $(strip $(addprefix -g,$(subst ;, ,$3)))
 ifneq ($(WAVE_LEVELS),)
 	$(WAVE_INIT) $(WAVE) $(GTKW) $(WAVE_LEVELS)
 endif
@@ -223,19 +225,20 @@ endef
 
 # UVVM
 clean::
-	rm -f $(wildcard _*.txt)
+	rm -f $(wildcard _*.txt) $(wildcard *.lst)
 
 # waveforms
 clean::
-	rm -f $(wildcard *.vcd) $(wildcard *.gtkw)
+	rm -f $(wildcard *.vcd) $(wildcard *.gtkw) $(wildcard *.wlf)
 
 # GHDL
 clean::
-	rm -f $(TOP) $(TOP).exe $(WORK)-obj08.cf $(wildcard *.o)
+	rm -f $(TOP) $(TOP).exe $(WORK)-obj08.cf $(wildcard *.o) $(wildcard *.cf)
 
 # NVC, ModelSim, Questa
 clean::
 	rm -rf $(WORK)
+	rm -rf vsim
 
 # ModelSim, Questa
 clean::

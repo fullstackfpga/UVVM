@@ -11,8 +11,9 @@
 #--------------------------------------------------------------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------
-# Run simulation
+# Call compile and simulate scripts
 #-----------------------------------------------------------------------
-vsim bitvis_uart.uart_vvc_demo_tb
-run -all
-quit
+do compile_dependencies.do
+do compile_src.do
+do compile_demo_tb.do
+do simulate_demo_tb.do

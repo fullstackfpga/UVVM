@@ -13,6 +13,6 @@
 #-----------------------------------------------------------------------
 # Run simulation
 #-----------------------------------------------------------------------
-vsim bitvis_uart.uart_vvc_demo_tb
+vsim bitvis_vip_avalon_mm.avalon_mm_vvc_tb
+do waves.do
 run -all
-quit

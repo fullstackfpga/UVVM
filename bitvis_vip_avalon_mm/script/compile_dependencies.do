@@ -10,9 +10,22 @@
 # Note : Any functionality not explicitly described in the documentation is subject to change at any time
 #--------------------------------------------------------------------------------------------------------------------------------
 
+# Overload quietly (Modelsim specific command) to let it work in Riviera-Pro
+proc quietly { args } {
+  if {[llength $args] == 0} {
+    puts "quietly"
+  } else {
+    # this works since tcl prompt only prints the last command given. list prints "".
+    uplevel $args; list;
+  }
+}
+
 #-----------------------------------------------------------------------
-# Run simulation
+# Call compile scripts from dependent libraries
 #-----------------------------------------------------------------------
-vsim bitvis_uart.uart_vvc_demo_tb
-run -all
-quit
+quietly set root_path "../.."
+do $root_path/script/compile_src.do $root_path/uvvm_util $root_path/uvvm_util/sim
+do $root_path/script/compile_src.do $root_path/uvvm_vvc_framework $root_path/uvvm_vvc_framework/sim
+do $root_path/script/compile_src.do $root_path/bitvis_vip_scoreboard $root_path/bitvis_vip_scoreboard/sim
+do $root_path/script/compile_src.do $root_path/bitvis_vip_sbi $root_path/bitvis_vip_sbi/sim
+do $root_path/script/compile_src.do $root_path/bitvis_vip_avalon_mm $root_path/bitvis_vip_avalon_mm/sim
