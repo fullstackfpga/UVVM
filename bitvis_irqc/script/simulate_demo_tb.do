@@ -16,3 +16,4 @@
 vsim bitvis_irqc.irqc_demo_tb
 do wave.do
 run -all
+quit

@@ -15,3 +15,4 @@
 #-----------------------------------------------------------------------
 vsim bitvis_vip_scoreboard.sb_uart_sbi_demo_tb
 run -all
+quit

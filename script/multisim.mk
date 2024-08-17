@@ -239,6 +239,7 @@ clean::
 clean::
 	rm -rf $(WORK)
 	rm -rf vsim
+	rm -f $(wildcard *_Alert.txt) $(wildcard *_Log.txt) 
 
 # ModelSim, Questa
 clean::

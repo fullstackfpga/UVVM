@@ -13,6 +13,6 @@
 #-----------------------------------------------------------------------
 # Run simulation
 #-----------------------------------------------------------------------
-vsim bitvis_vip_error_injection.ei_demo_tb
+vsim bitvis_vip_axistream.axistream_vvc_simple_tb
 run -all
 quit
